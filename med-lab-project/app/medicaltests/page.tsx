@@ -1,5 +1,4 @@
 import { supabase } from "@/utils/supabase";
-import Link from 'next/link'; // 1. Added this import
 
 export const revalidate = 0; 
 
@@ -17,20 +16,9 @@ export default async function MedicalTestsPage() {
 
   return (
     <div className="p-10 font-sans bg-zinc-50 min-h-screen">
-      {/* 2. Replaced the old <a> tag with this Back Button */}
-      <div className="mb-6">
-        <Link 
-          href="/" 
-          className="text-indigo-600 hover:text-indigo-800 font-medium flex items-center gap-2 transition-all"
-        >
-          ← Back to Home
-        </Link>
-      </div>
-
       <h1 className="text-3xl font-bold mb-8 text-indigo-900">
         Medical Lab Results
       </h1>
-
       <div className="overflow-hidden rounded-xl border border-gray-200 shadow-lg">
         <table className="w-full bg-white text-left">
           <thead className="bg-indigo-600 text-white">
