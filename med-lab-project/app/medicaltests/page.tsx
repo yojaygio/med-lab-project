@@ -1,28 +1,32 @@
 import { supabase } from "@/utils/supabase";
+import Link from 'next/link'; // 1. Added this import
 
-export const revalidate = 0; // Add this line at the top of page.tsx
+export const revalidate = 0; 
 
 export default async function MedicalTestsPage() {
-  // This satisfies the JOIN requirement by fetching names instead of IDs
   const { data: tests, error } = await supabase.from("medicaltests").select(`
-  name,
-  normalmin,
-  normalmax,
-  testcategories:idcategory ( name ),
-  uom:iduom ( name )
-`)
+    name,
+    normalmin,
+    normalmax,
+    testcategories:idcategory ( name ),
+    uom:iduom ( name )
+  `)
 
   if (error)
     return <div className="p-10">Error loading data. Check RLS policies.</div>;
 
   return (
-    <div className="p-10 font-sans">
-      <a
-        href="/medicaltests"
-        className="text-blue-500 underline hover:text-blue-700"
-      >
-        View Medical Lab Results →
-      </a>
+    <div className="p-10 font-sans bg-zinc-50 min-h-screen">
+      {/* 2. Replaced the old <a> tag with this Back Button */}
+      <div className="mb-6">
+        <Link 
+          href="/" 
+          className="text-indigo-600 hover:text-indigo-800 font-medium flex items-center gap-2 transition-all"
+        >
+          ← Back to Home
+        </Link>
+      </div>
+
       <h1 className="text-3xl font-bold mb-8 text-indigo-900">
         Medical Lab Results
       </h1>
@@ -31,21 +35,11 @@ export default async function MedicalTestsPage() {
         <table className="w-full bg-white text-left">
           <thead className="bg-indigo-600 text-white">
             <tr>
-              <th className="px-6 py-4 font-semibold uppercase text-xs">
-                Test Name
-              </th>
-              <th className="px-6 py-4 font-semibold uppercase text-xs">
-                Category
-              </th>
-              <th className="px-6 py-4 font-semibold uppercase text-xs">
-                Unit
-              </th>
-              <th className="px-6 py-4 font-semibold uppercase text-xs">
-                Normal Min
-              </th>
-              <th className="px-6 py-4 font-semibold uppercase text-xs">
-                Normal Max
-              </th>
+              <th className="px-6 py-4 font-semibold uppercase text-xs">Test Name</th>
+              <th className="px-6 py-4 font-semibold uppercase text-xs">Category</th>
+              <th className="px-6 py-4 font-semibold uppercase text-xs">Unit</th>
+              <th className="px-6 py-4 font-semibold uppercase text-xs">Normal Min</th>
+              <th className="px-6 py-4 font-semibold uppercase text-xs">Normal Max</th>
             </tr>
           </thead>
           <tbody className="divide-y divide-gray-100">
@@ -54,13 +48,10 @@ export default async function MedicalTestsPage() {
                 key={i}
                 className="hover:bg-indigo-50 transition-colors border-b"
               >
-                <td className="px-6 py-4 font-medium text-gray-900">
-                  {test.name}
-                </td>
+                <td className="px-6 py-4 font-medium text-gray-900">{test.name}</td>
                 <td className="px-6 py-4 text-gray-600">
                   {test.testcategories?.name || "Link Error"}
                 </td>
-
                 <td className="px-6 py-4 text-gray-600">
                   {test.uom?.name || "Unit missing in DB"}
                 </td>
